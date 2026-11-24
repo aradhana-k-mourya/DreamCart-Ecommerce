@@ -1,0 +1,77 @@
+{% extends 'base.html' %}{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar">
+    <span class="eyebrow">DREAMCART / ADMIN</span>
+    <h2>Store desk.</h2>
+    <a href="{{ url_for('admin_categories') }}">Categories</a
+    ><a href="{{ url_for('admin_messages') }}">Messages</a
+    ><a href="{{ url_for('admin_coupons') }}">Coupons</a
+    ><a href="{{ url_for('admin_reviews') }}">Reviews</a
+    ><a href="{{ url_for('admin_dashboard') }}">Overview</a
+    ><a href="{{ url_for('admin_products') }}">Products</a
+    ><a class="active" href="{{ url_for('admin_orders') }}">Orders</a
+    ><a href="{{ url_for('admin_customers') }}">Customers</a>
+  </aside>
+  <div class="admin-main">
+    <div class="admin-heading">
+      <div>
+        <span class="eyebrow">KEEP THINGS MOVING</span>
+        <h1>Orders</h1>
+      </div>
+    </div>
+    <div class="admin-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ORDER</th>
+            <th>PERSON</th>
+            <th>TOTAL</th>
+            <th>PLACED</th>
+            <th>STATUS</th>
+            <th>UPDATE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in orders %}
+          <tr>
+            <td>
+              <a href="{{ url_for('track_order',number=o.order_number) }}"
+                >{{ o.order_number }}</a
+              >
+            </td>
+            <td>{{ o.user.name }}</td>
+            <td>₹{{ '%.2f'|format(o.total) }}</td>
+            <td>{{ o.created_at.strftime('%b %d, %Y') }}</td>
+            <td>{{ o.status }}</td>
+            <td>
+              <form
+                class="status-form"
+                method="post"
+                action="{{ url_for('admin_status',oid=o.id) }}"
+              >
+                <input
+                  type="hidden"
+                  name="csrf_token"
+                  value="{{ csrf_token() }}"
+                /><select name="status">
+                  {% for s in ['Order Placed','Processing','Shipped','Out for
+                  Delivery','Delivered','Cancelled'] %}
+                  <option {% if o.status == s %}selected{% endif %}>
+                    {{ s }}
+                  </option>
+                  {% endfor %}</select
+                ><button class="text-button">Save</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="empty-table">No orders to show just yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

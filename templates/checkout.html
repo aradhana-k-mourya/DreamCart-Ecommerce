@@ -1,0 +1,81 @@
+{% extends 'base.html' %}{% block title %}Checkout — DreamCart{% endblock %}{%
+block content %}
+<section class="page-intro compact">
+  <span class="eyebrow">ALMOST HOME</span>
+  <h1>Let’s get it to you.</h1>
+  <p>A few details and these good things are on their way.</p>
+</section>
+<section class="checkout-layout">
+  <div class="checkout-form">
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <h2>Delivery details</h2>
+      <label
+        >Full address<textarea
+          name="address"
+          rows="4"
+          required
+          placeholder="Street, city, postal code…"
+        >
+{{ current_user.address }}</textarea
+        >
+      </label>
+      <div class="field-pair">
+        <label>Name<input value="{{ current_user.name }}" readonly /></label
+        ><label>Phone<input value="{{ current_user.phone }}" readonly /></label>
+      </div>
+      <h2>How would you like to pay?</h2>
+      <label class="payment-choice"
+        ><input type="radio" name="payment_method" value="cod" checked /><span
+          ><b>Cash on delivery</b
+          ><small
+            >Pay when your order arrives. No payment taken online.</small
+          ></span
+        ></label
+      ><label class="payment-choice {% if not stripe_enabled %}disabled-choice{% endif %}"
+        ><input
+          type="radio"
+          name="payment_method"
+          value="stripe"
+          {% if not stripe_enabled %}disabled{% endif %}
+        /><span
+          ><b>Card payment {% if not stripe_enabled %}<small class="tag-coming">Add Stripe keys</small>{% endif %}</b
+          ><small
+            >{% if stripe_enabled %}Secure Stripe test checkout; card details stay with Stripe.{% else %}Connect Stripe test keys to enable secure online checkout.{% endif %}</small
+          ></span
+        ></label
+      ><label
+        >Coupon code <small>Try WELCOME10</small
+        ><input name="coupon" value="{{ coupon_code }}" placeholder="A little thank-you code" /></label
+      ><button class="button button-dark full">
+        Place my order <span>↗</span>
+      </button>
+      <p class="muted small">
+        This demo does not collect or process card details.
+      </p>
+    </form>
+  </div>
+  <aside class="summary-card">
+    <span class="eyebrow">IN YOUR BAG</span>
+    <h2>Order summary</h2>
+    {% for i in items %}
+    <div class="summary-product">
+      <span>{{ i.quantity }} × {{ i.product.name }}</span
+      ><b>₹{{ '%.2f'|format(i.product.sale_price*i.quantity) }}</b>
+    </div>
+    {% endfor %}
+    <div class="summary-line">
+      <span>Subtotal</span><b>₹{{ '%.2f'|format(subtotal) }}</b>
+    </div>
+    <div class="summary-line">
+      <span>Delivery</span
+      ><b>{{ 'Free' if shipping==0 else '₹%.2f'|format(shipping) }}</b>
+    </div>
+    <div class="summary-total">
+      <span>Total{% if discount %} after coupon{% endif %}</span
+      ><strong>₹{{ '%.2f'|format(total) }}</strong>
+    </div>
+    {% if discount %}<p class="summary-note">{{ coupon_code }} saves ₹{{ '%.2f'|format(discount) }}.</p>{% else %}<p class="summary-note">WELCOME10 takes 10% off your subtotal.</p>{% endif %}
+  </aside>
+</section>
+{% endblock %}

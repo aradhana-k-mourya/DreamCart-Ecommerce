@@ -1,0 +1,52 @@
+{% extends 'base.html' %}{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar">
+    <span class="eyebrow">DREAMCART / ADMIN</span>
+    <h2>Store desk.</h2>
+    <a href="{{ url_for('admin_categories') }}">Categories</a
+    ><a href="{{ url_for('admin_messages') }}">Messages</a
+    ><a href="{{ url_for('admin_coupons') }}">Coupons</a
+    ><a href="{{ url_for('admin_reviews') }}">Reviews</a
+    ><a href="{{ url_for('admin_dashboard') }}">Overview</a
+    ><a href="{{ url_for('admin_products') }}">Products</a
+    ><a href="{{ url_for('admin_orders') }}">Orders</a
+    ><a class="active" href="{{ url_for('admin_customers') }}">Customers</a>
+  </aside>
+  <div class="admin-main">
+    <div class="admin-heading">
+      <div>
+        <span class="eyebrow">THE PEOPLE BEHIND THE ORDERS</span>
+        <h1>Customers</h1>
+      </div>
+    </div>
+    <div class="admin-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>NAME</th>
+            <th>EMAIL</th>
+            <th>PHONE</th>
+            <th>JOINED</th>
+            <th>ORDERS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td><b>{{ u.name }}</b></td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone or '—' }}</td>
+            <td>{{ u.created_at.strftime('%b %d, %Y') }}</td>
+            <td>{{ u.orders|length }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="empty-table">No customers yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

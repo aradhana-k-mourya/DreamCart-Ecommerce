@@ -1,0 +1,63 @@
+{% extends 'base.html' %}{% block title %}{{ 'Create an account' if
+mode=='register' else 'Sign in' }} — DreamCart{% endblock %}{% block content
+%}
+<section class="auth-wrap">
+  <div class="auth-aside">
+    <span class="eyebrow">A MORE THOUGHTFUL KIND OF SHOPPING</span>
+    <h1>Make room for<br /><i>good things.</i></h1>
+    <p>
+      Your own little corner of DreamCart. Save your favourites and keep an
+      eye on your orders.
+    </p>
+    <span class="auth-decoration">✳</span>
+  </div>
+  <div class="auth-card">
+    <span class="eyebrow"
+      >{{ 'YOUR NEXT CHAPTER' if mode=='register' else 'WELCOME BACK' }}</span
+    >
+    <h2>{{ 'Create your account' if mode=='register' else 'Come on in.' }}</h2>
+    <p>
+      {{ 'A few details and you’re home.' if mode=='register' else 'We’ve saved
+      your place.' }}
+    </p>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />{% if
+      mode=='register' %}<label
+        >Your name<input
+          name="name"
+          required
+          autocomplete="name"
+          placeholder="How should we call you?" /></label
+      ><label
+        >Phone number <small>optional</small
+        ><input name="phone" autocomplete="tel" placeholder="+91" /></label
+      >{% endif %}<label
+        >Email address<input
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="you@example.com" /></label
+      ><label
+        >Password<input
+          name="password"
+          type="password"
+          required
+          minlength="8"
+          autocomplete="{{ 'new-password' if mode=='register' else 'current-password' }}"
+          placeholder="At least 8 characters" /></label
+      ><button class="button button-dark full">
+        {{ 'Create account' if mode=='register' else 'Sign in' }} <span>↗</span>
+      </button>
+    </form>
+    {% if mode=='login' %}<p class="auth-switch"><a href="{{ url_for('forgot_password') }}">Forgot your password?</a></p>{% endif %}
+    <div class="auth-switch">
+      {{ 'Already have a home here?' if mode=='register' else 'New around here?'
+      }}
+      <a href="{{ url_for('login' if mode=='register' else 'register') }}"
+        >{{ 'Sign in' if mode=='register' else 'Create an account' }}</a
+      >
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}{% block title %}Your bag — DreamCart{% endblock %}{%
+block content %}
+<section class="page-intro compact">
+  <span class="eyebrow">YOUR DREAMCART BAG</span>
+  <h1>A few good things.</h1>
+  <p>
+    {{ items|length }} item{{ '' if items|length==1 else 's' }} tucked away for
+    you.
+  </p>
+</section>
+{% if items %}
+<section class="checkout-layout">
+  <div class="cart-list">
+    {% for i in items %}
+    <article class="cart-item">
+      <a
+        class="cart-image"
+        href="{{ url_for('product_detail',slug=i.product.slug) }}"
+        >{% if i.product.image %}<img
+          src="{{ i.product.image if i.product.image.startswith('http') else url_for('static',filename=i.product.image) }}"
+        />{% else %}<span>✳</span>{% endif %}</a
+      >
+      <div class="cart-description">
+        <span class="eyebrow">{{ i.product.category.name }}</span
+        ><a href="{{ url_for('product_detail',slug=i.product.slug) }}"
+          ><h3>{{ i.product.name }}</h3></a
+        ><span class="muted"
+          >₹{{ '%.2f'|format(i.product.sale_price) }} each</span
+        >
+        <div class="cart-controls">
+          <form action="{{ url_for('cart_update',iid=i.id) }}" method="post">
+            <input
+              type="hidden"
+              name="csrf_token"
+              value="{{ csrf_token() }}"
+            /><label class="sr-only">Quantity</label
+            ><input
+              name="quantity"
+              type="number"
+              min="0"
+              max="{{ i.product.stock }}"
+              value="{{ i.quantity }}"
+            /><button class="text-button">Update</button>
+          </form>
+          <form action="{{ url_for('cart_remove',iid=i.id) }}" method="post">
+            <input
+              type="hidden"
+              name="csrf_token"
+              value="{{ csrf_token() }}"
+            /><button class="text-button remove-link">Remove</button>
+          </form>
+        </div>
+      </div>
+      <strong>₹{{ '%.2f'|format(i.product.sale_price*i.quantity) }}</strong>
+    </article>
+    {% endfor %}<a class="under-link" href="{{ url_for('products') }}"
+      >← Keep looking around</a
+    >
+  </div>
+  <aside class="summary-card">
+    <span class="eyebrow">THE SHORT VERSION</span>
+    <h2>Your summary</h2>
+    <div class="summary-line">
+      <span>Subtotal</span
+      ><b>₹{{ '%.2f'|format(cart_subtotal) }}</b>
+    </div>
+    <div class="summary-line">
+      <span>Shipping</span><span>{{ 'Free' if cart_shipping==0 else '₹%.2f'|format(cart_shipping) }}</span>
+    </div>
+    <div class="summary-total">
+      <span>Estimated total</span><strong>₹{{ '%.2f'|format(cart_total) }}</strong>
+    </div>
+    <a class="button button-dark full" href="{{ url_for('checkout') }}"
+      >Continue to checkout <span>↗</span></a
+    >
+    <p class="summary-note">Free, considered delivery on orders over ₹2,500.</p>
+  </aside>
+</section>
+{% else %}
+<section class="empty-state">
+  <span>♡</span>
+  <h2>Your bag has room for something.</h2>
+  <p>Take a look around and see what feels like you.</p>
+  <a class="button button-dark" href="{{ url_for('products') }}"
+    >Explore the edit ↗</a
+  >
+</section>
+{% endif %}{% endblock %}

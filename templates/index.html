@@ -1,0 +1,96 @@
+{% extends 'base.html' %}{% from 'macros.html' import card %}{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">THE EVERYDAY, ELEVATED</span>
+    <h1>Good things<br />find their way <i>home.</i></h1>
+    <p>
+      Thoughtful pieces for the rituals, rooms and routines that make a life.
+    </p>
+    <a class="button button-dark" href="{{ url_for('products') }}"
+      >Find your good thing <span>↗</span></a
+    >
+    <div class="hero-note">
+      <span class="tiny-star">✳</span> Curated with intention. Made to be lived
+      with.
+    </div>
+  </div>
+  <div class="hero-art">
+    <div class="hero-sun"></div>
+    <div class="hero-shape shape-one">✳</div>
+    <div class="hero-shape shape-two">◒</div>
+    <div class="hero-card">
+      <span class="hero-card-overline">THE NEW EDIT</span
+      ><span class="hero-card-title">A softer<br />kind of everyday</span
+      ><span class="hero-card-arrow">↗</span>
+    </div>
+    <div class="hero-stamp">OBJECTS<br />WITH<br />INTENTION</div>
+  </div>
+  <div class="hero-index">01 <span></span> 04</div>
+</section>
+<section class="trust-row">
+  <div><span>✳</span> Thoughtfully selected</div>
+  <div><span>⌁</span> Easy, considered returns</div>
+  <div><span>♡</span> Free shipping over ₹2,500</div>
+  <div><span>✉</span> Here when you need us</div>
+</section>
+<section class="section category-section">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">A PLACE TO BEGIN</span>
+      <h2>Browse by feeling.</h2>
+    </div>
+    <a class="under-link" href="{{ url_for('products') }}">All categories ↗</a>
+  </div>
+  <div class="category-grid">
+    {% for c in site_categories[:6] %}<a
+      class="category-tile tile-{{ loop.index }}"
+      href="{{ url_for('products',category=c.slug) }}"
+      ><span class="category-icon"
+        >{{ ['✳','◒','▣','⌘','◍','▤'][loop.index0] }}</span
+      ><span>{{ c.name }}</span><i>↗</i></a
+    >{% endfor %}
+  </div>
+</section>
+<section class="section product-section tinted">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">THE GOOD STUFF</span>
+      <h2>Customer favourites.</h2>
+    </div>
+    <a class="under-link" href="{{ url_for('products',sort='popular') }}"
+      >See everything ↗</a
+    >
+  </div>
+  <div class="product-grid">
+    {% for p in featured %}{{ card(p) }}{% endfor %}
+  </div>
+</section>
+<section class="editorial">
+  <div class="editorial-art">
+    <span>✳</span><b>made<br />to last</b><i>DREAMCART / VOL. 01</i>
+  </div>
+  <div class="editorial-copy">
+    <span class="eyebrow">A NOTE ON BUYING WELL</span>
+    <h2>Less, but a little<br /><i>more meaningful.</i></h2>
+    <p>
+      We look for honest materials, small details and things that earn their
+      place in your day. No endless scroll. Just a good place to start.
+    </p>
+    <a class="button button-outline" href="{{ url_for('about') }}"
+      >Get to know us <span>↗</span></a
+    >
+  </div>
+</section>
+<section class="section product-section">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">JUST ARRIVED</span>
+      <h2>Fresh from the edit.</h2>
+    </div>
+    <a class="under-link" href="{{ url_for('products',sort='newest') }}"
+      >Shop new arrivals ↗</a
+    >
+  </div>
+  <div class="product-grid">{% for p in newest %}{{ card(p) }}{% endfor %}</div>
+</section>
+{% endblock %}

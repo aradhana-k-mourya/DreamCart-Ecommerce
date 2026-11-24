@@ -1,0 +1,60 @@
+{% extends 'base.html' %}{% block content %}
+<section class="contact-layout">
+  <div class="contact-copy">
+    <span class="eyebrow">A REAL PERSON, PROMISE</span>
+    <h1>We're all<br /><i>ears.</i></h1>
+    <p>
+      A question about a find, an order, or just want to say hello? Send us a
+      note. Use the email link below to contact us directly. The form saves a note for the store admin.
+    </p>
+    <div class="contact-aside">
+      ✉ &nbsp; <a href="mailto:{{ contact_email }}">{{ contact_email }}</a><br />↗ &nbsp; Monday to Friday, 9–5
+    </div>
+  </div>
+  <form method="post" class="contact-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /><label
+      >Your name<input
+        required
+        name="name"
+        placeholder="The name we should use" /></label
+    ><label
+      >Email address<input
+        required
+        type="email"
+        name="email"
+        placeholder="you@example.com" /></label
+    ><label
+      >What’s on your mind?<textarea
+        required
+        name="message"
+        rows="5"
+        placeholder="We're listening…"
+      ></textarea></label
+    ><button class="button button-dark">Send your note ↗</button>
+    <div class="faq">
+      <h3>A couple of quick answers</h3>
+      <details>
+        <summary>When will my order arrive?</summary>
+        <p>
+          Orders are prepared within 1–2 business days. You can follow your
+          order from your account.
+        </p>
+      </details>
+      <details>
+        <summary>Can I change my delivery address?</summary>
+        <p>
+          If your order has not shipped, contact us with your order number and
+          we’ll help.
+        </p>
+      </details>
+      <details>
+        <summary>How do returns work?</summary>
+        <p>
+          Get in touch within 14 days of delivery and we’ll guide you through a
+          return.
+        </p>
+      </details>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}{% block title %}Order {{ order.order_number }} —
+DreamCart{% endblock %}{% block content %}
+<section class="page-intro compact">
+  <span class="eyebrow">A LITTLE UPDATE</span>
+  <h1>Your order is {{ order.status|lower }}.</h1>
+  <p>
+    Order {{ order.order_number }} · placed {{ order.created_at.strftime('%B %d,
+    %Y') }}
+  </p>
+</section>
+<section class="order-panel">
+  <div class="order-progress">
+    {% set stages=['Order Placed','Processing','Shipped','Out for
+    Delivery','Delivered'] %}{% for stage in stages %}
+    <div
+      class="progress-step {{ 'done' if stages.index(order.status) >= loop.index0 and order.status!='Cancelled' else '' }}"
+    >
+      <span
+        >{% if stages.index(order.status) >= loop.index0 and
+        order.status!='Cancelled' %}✓{% else %}{{ loop.index }}{% endif %}</span
+      ><small>{{ stage }}</small>
+    </div>
+    {% endfor %}
+  </div>
+  {% if order.status=='Cancelled' %}
+  <div class="notice error">This order was cancelled.</div>
+  {% endif %}
+  <div class="order-columns">
+    <div>
+      <h3>In this order</h3>
+      {% for i in order.items %}
+      <div class="summary-product">
+        <span>{{ i.quantity }} × {{ i.name }}</span
+        ><b>₹{{ '%.2f'|format(i.price*i.quantity) }}</b>
+      </div>
+      {% endfor %}
+      <div class="summary-total">
+        <span>Total</span><strong>₹{{ '%.2f'|format(order.total) }}</strong>
+      </div>
+    </div>
+    <div>
+      <h3>Delivery address</h3>
+      <p>{{ order.address }}</p>
+      <h3>Payment</h3>
+      <p>{{ order.payment_method }} · {{ order.payment_status }}</p>
+    </div>
+  </div>
+  {% if order.status in ['Order Placed','Processing'] and not
+  current_user.is_admin %}
+  <form
+    method="post"
+    action="{{ url_for('cancel_order',number=order.order_number) }}"
+    data-confirm="Cancel this order?"
+  >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /><button
+      class="text-button remove-link"
+    >
+      Cancel order
+    </button>
+  </form>
+  {% endif %}
+</section>
+{% if my_orders %}
+<section class="order-history">
+  <div class="order-history-heading">
+    <div>
+      <span class="eyebrow">YOUR ORDER LIST</span>
+      <h2>My orders</h2>
+    </div>
+    <a class="under-link" href="{{ url_for('account') }}">Account ↗</a>
+  </div>
+  <div class="order-history-list">
+    {% for item in my_orders %}<a
+      class="history-order {% if item.id==order.id %}current{% endif %}"
+      href="{{ url_for('track_order',number=item.order_number) }}"
+      ><span
+        ><b>{{ item.order_number }}</b
+        ><small
+          >{{ item.created_at.strftime('%b %d, %Y') }} · {{ item.items|length }}
+          items</small
+        ></span
+      ><span class="status-pill">{{ item.status }}</span
+      ><strong>₹{{ '%.2f'|format(item.total) }} ↗</strong></a
+    >{% endfor %}
+  </div>
+</section>
+{% endif %} {% endblock %}

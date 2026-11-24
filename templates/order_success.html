@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% block title %}Order received — DreamCart{%
+endblock %}{% block content %}
+<section class="success-page">
+  <div class="success-stamp">✓</div>
+  <span class="eyebrow">A GOOD THING IS ON ITS WAY</span>
+  <h1>Order received.<br /><i>Thank you.</i></h1>
+  <p>
+    Your order <b>{{ order.order_number }}</b> is tucked safely in. We’ll keep
+    you posted as it makes its way to you.
+  </p>
+  <div class="success-details">
+    <span>ORDER TOTAL</span><b>₹{{ '%.2f'|format(order.total) }}</b
+    ><span>PAYMENT</span><b>{{ order.payment_method }}</b>
+  </div>
+  <a
+    class="button button-dark"
+    href="{{ url_for('track_order',number=order.order_number) }}"
+    >Follow your order ↗</a
+  ><a class="under-link" href="{{ url_for('products') }}">Back to browsing</a>
+</section>
+{% endblock %}

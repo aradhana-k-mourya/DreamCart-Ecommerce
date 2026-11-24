@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f8f7f3" />
+    <title>
+      {% block title %}DreamCart — thoughtfully chosen{% endblock %}
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='css/style.css') }}"
+    />
+    <script defer src="{{ url_for('static',filename='js/main.js') }}"></script>
+  </head>
+  <body>
+    <div class="announcement">
+      A little something for your first order: use <b>WELCOME10</b> at checkout
+      <span>✳</span>
+    </div>
+    <header class="site-header">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="brand-mark">DC</span
+        ><span>DreamCart<small>THOUGHTFUL FINDS, BETTER DAYS</small></span></a>
+
+      <form class="search" action="{{ url_for('products') }}">
+        <input
+          name="q"
+          value="{{ request.args.get('q','') }}"
+          placeholder="Search for something lovely…"
+          aria-label="Search products"
+        /><button aria-label="Search">⌕</button>
+      </form>
+      <nav class="header-actions">
+        <a href="{{ url_for('products') }}">Shop</a>{% if current_user %}<a
+          href="{{ url_for('account') }}"
+          >Account</a
+        >{% if current_user.is_admin %}<a
+          href="{{ url_for('admin_dashboard') }}"
+          >Admin</a
+        >{% endif %}
+        <form action="{{ url_for('logout') }}" method="post" class="inline">
+          <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}"
+          /><button class="text-button">Log out</button>
+        </form>
+        {% else %}<a href="{{ url_for('login') }}">Sign in</a>{% endif %}<a
+          class="bag-link"
+          href="{{ url_for('cart') }}"
+          >Bag <span>{{ cart_count }}</span></a
+        >
+      </nav>
+    </header>
+    <nav class="category-nav">
+      <a href="{{ url_for('products') }}">All things</a>{% for c in
+      site_categories %}<a href="{{ url_for('products',category=c.slug) }}"
+        >{{ c.name }}</a
+      >{% endfor %}<a href="{{ url_for('wishlist') }}">Saved ♡</a>
+    </nav>
+    <main>
+      {% with messages=get_flashed_messages(with_categories=true) %}{% if
+      messages %}
+      <div class="notices">
+        {% for category,message in messages %}
+        <div class="notice {{ category }}">
+          {{ message }}<button
+            type="button"
+            class="notice-close"
+            aria-label="Dismiss"
+          >
+            ×
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}{% endwith %}{% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+      <div class="footer-top">
+        <div>
+          <a class="brand footer-brand" href="{{ url_for('index') }}"
+            ><span class="brand-mark">DC</span
+            ><span
+              >DreamCart<small>THOUGHTFUL FINDS, BETTER DAYS</small></span
+            ></a
+          >
+          <p>Objects for the everyday, chosen with care.</p>
+        </div>
+        <div>
+          <b>Explore</b><a href="{{ url_for('products') }}">Shop all</a
+          ><a href="{{ url_for('about') }}">Our story</a
+          ><a href="{{ url_for('contact') }}">Get in touch</a>
+        </div>
+        <div>
+          <b>Here to help</b><a href="{{ url_for('account') }}">Your account</a
+          ><a href="{{ url_for('privacy') }}">Privacy</a
+          ><a href="{{ url_for('terms') }}">Terms</a>
+        </div>
+        <div class="newsletter">
+          <b>Need help? Email us</b>
+          <p>New finds, thoughtful ideas, occasional good news.</p>
+          <a href="mailto:{{ contact_email }}">{{ contact_email }} ↗</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 DreamCart</span><span>Made for the little things.</span
+        ><span>Payments are not processed in this demo.</span>
+      </div>
+    </footer>
+  </body>
+</html>

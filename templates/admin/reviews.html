@@ -1,0 +1,47 @@
+{% extends 'base.html' %}{% block content %}
+<section class="admin-form-page">
+  <a class="under-link" href="{{ url_for('admin_dashboard') }}">← Store desk</a
+  ><span class="eyebrow">COMMUNITY NOTES</span>
+  <h1>Reviews</h1>
+  <div class="admin-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>PRODUCT</th>
+          <th>PERSON</th>
+          <th>RATING</th>
+          <th>REVIEW</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reviews %}
+        <tr>
+          <td>{{ r.product.name }}</td>
+          <td>{{ r.user.name }}</td>
+          <td>{{ '★' * r.rating }}</td>
+          <td>{{ r.body }}</td>
+          <td>
+            <form
+              method="post"
+              action="{{ url_for('admin_review_delete',rid=r.id) }}"
+              data-confirm="Remove this review?"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              /><button class="text-button remove-link">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="empty-table">No reviews yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

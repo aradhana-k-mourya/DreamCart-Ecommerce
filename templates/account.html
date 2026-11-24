@@ -1,0 +1,79 @@
+{% extends 'base.html' %}{% block title %}Your account — DreamCart{% endblock
+%}{% block content %}
+<section class="page-intro compact">
+  <span class="eyebrow">YOUR LITTLE CORNER</span>
+  <h1>Hello, {{ current_user.name.split()[0] }}.</h1>
+  <p>Keep your details close and your orders in view.</p>
+</section>
+<section class="account-layout">
+  <aside class="account-menu">
+    <a class="active" href="#profile">Your details</a
+    ><a href="#orders">Order history ({{ orders|length }})</a
+    ><a href="{{ url_for('wishlist') }}">Saved things</a
+    ><a href="{{ url_for('cart') }}">Your bag</a>
+  </aside>
+  <div class="account-content">
+    <form id="profile" class="profile-form" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /><span
+        class="eyebrow"
+        >THE BASICS</span
+      >
+      <h2>Your details</h2>
+      <label
+        >Name<input
+          name="name"
+          value="{{ current_user.name }}"
+          required /></label
+      ><label>Email<input value="{{ current_user.email }}" readonly /></label
+      ><label
+        >Phone<input name="phone" value="{{ current_user.phone }}" /></label
+      ><label
+        >Delivery address<textarea
+          rows="3"
+          name="address"
+          placeholder="Save a delivery address for next time"
+        >
+{{ current_user.address }}</textarea
+        >
+      </label>
+      <h3 class="password-heading">Change password</h3>
+      <label
+        >Current password<input
+          type="password"
+          name="current_password"
+          autocomplete="current-password" /></label
+      ><label
+        >New password<input
+          type="password"
+          name="new_password"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="At least 8 characters" /></label
+      ><button class="button button-dark">Save details</button>
+    </form>
+    <div class="orders-list" id="orders">
+      <span class="eyebrow">THE PAPER TRAIL</span>
+      <h2>Your orders</h2>
+      {% for o in orders %}<a
+        class="order-row"
+        href="{{ url_for('track_order',number=o.order_number) }}"
+        ><span
+          ><b>{{ o.order_number }}</b
+          ><small
+            >{{ o.created_at.strftime('%b %d, %Y') }} · {{ o.items|length }}
+            items</small
+          ></span
+        ><span class="status-pill">{{ o.status }}</span
+        ><strong>₹{{ '%.2f'|format(o.total) }} ↗</strong></a
+      >{% else %}
+      <div class="empty-inline">
+        <p>No orders just yet.</p>
+        <a class="under-link" href="{{ url_for('products') }}"
+          >Browse the edit ↗</a
+        >
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

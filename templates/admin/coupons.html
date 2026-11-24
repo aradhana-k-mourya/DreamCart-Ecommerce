@@ -1,0 +1,57 @@
+{% extends 'base.html' %}{% block content %}
+<section class="admin-form-page">
+  <a class="under-link" href="{{ url_for('admin_dashboard') }}">← Store desk</a
+  ><span class="eyebrow">A LITTLE THANK-YOU</span>
+  <h1>Coupons</h1>
+  <form method="post" class="product-admin-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="field-pair">
+      <label>Code<input name="code" required placeholder="SPRING15" /></label
+      ><label
+        >Discount %<input
+          name="percent"
+          type="number"
+          min="1"
+          max="90"
+          required
+      /></label>
+    </div>
+    <button class="button button-dark">Create coupon +</button>
+  </form>
+  <div class="admin-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>CODE</th>
+          <th>DISCOUNT</th>
+          <th>STATUS</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in coupons %}
+        <tr>
+          <td><b>{{ c.code }}</b></td>
+          <td>{{ c.percent }}%</td>
+          <td>{{ 'Active' if c.active else 'Paused' }}</td>
+          <td>
+            <form
+              method="post"
+              action="{{ url_for('admin_coupon_toggle',cid=c.id) }}"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              /><button class="text-button">
+                {{ 'Pause' if c.active else 'Activate' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

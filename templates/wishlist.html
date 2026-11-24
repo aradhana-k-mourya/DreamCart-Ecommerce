@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% from 'macros.html' import card %}{% block content %}
+<section class="page-intro compact">
+  <span class="eyebrow">A LITTLE COLLECTION OF MAYBES</span>
+  <h1>Saved for later.</h1>
+  <p>Your personal shortlist of things you love.</p>
+</section>
+<section class="section wishlist-section">
+  {% if items %}
+  <div class="product-grid">
+    {% for i in items %}{{ card(i.product) }}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span>♡</span>
+    <h2>Keep the good ones close.</h2>
+    <p>Tap a heart on anything you like and it will be waiting here.</p>
+    <a class="button button-dark" href="{{ url_for('products') }}"
+      >Browse the edit</a
+    >
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

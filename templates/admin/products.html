@@ -1,0 +1,74 @@
+{% extends 'base.html' %}{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar">
+    <span class="eyebrow">DREAMCART / ADMIN</span>
+    <h2>Store desk.</h2>
+    <a href="{{ url_for('admin_categories') }}">Categories</a
+    ><a href="{{ url_for('admin_messages') }}">Messages</a
+    ><a href="{{ url_for('admin_coupons') }}">Coupons</a
+    ><a href="{{ url_for('admin_reviews') }}">Reviews</a
+    ><a href="{{ url_for('admin_dashboard') }}">Overview</a
+    ><a class="active" href="{{ url_for('admin_products') }}">Products</a
+    ><a href="{{ url_for('admin_orders') }}">Orders</a
+    ><a href="{{ url_for('admin_customers') }}">Customers</a>
+  </aside>
+  <div class="admin-main">
+    <div class="admin-heading">
+      <div>
+        <span class="eyebrow">THE CURRENT EDIT</span>
+        <h1>Products</h1>
+      </div>
+      <a class="button button-dark" href="{{ url_for('admin_new') }}"
+        >+ Add a product</a
+      >
+    </div>
+    <div class="admin-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>NAME</th>
+            <th>CATEGORY</th>
+            <th>PRICE</th>
+            <th>STOCK</th>
+            <th>TOOLS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td><b>{{ p.name }}</b></td>
+            <td>{{ p.category.name }}</td>
+            <td>
+              ₹{{ '%.2f'|format(p.sale_price) }}{% if p.discount %}<small>
+                −{{ p.discount }}%</small
+              >{% endif %}
+            </td>
+            <td>
+              <span class="{{ 'stock-low' if p.stock<5 else '' }}"
+                >{{ p.stock }}</span
+              >
+            </td>
+            <td class="table-actions">
+              <a class="under-link" href="{{ url_for('admin_edit',pid=p.id) }}"
+                >Edit</a
+              >
+              <form
+                method="post"
+                action="{{ url_for('admin_delete',pid=p.id) }}"
+                data-confirm="Remove this product from the shop?"
+              >
+                <input
+                  type="hidden"
+                  name="csrf_token"
+                  value="{{ csrf_token() }}"
+                /><button class="text-button remove-link">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

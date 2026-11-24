@@ -1,0 +1,140 @@
+{% extends 'base.html' %}{% from 'macros.html' import card %}{% block content %}
+<div class="breadcrumb">
+  <a href="{{ url_for('index') }}">Home</a> /
+  <a href="{{ url_for('products',category=product.category.slug) }}"
+    >{{ product.category.name }}</a
+  >
+  / {{ product.name }}
+</div>
+<section class="detail-layout">
+  <div class="detail-visual">
+    {% if product.image %}<img
+      src="{{ product.image if product.image.startswith('http') else url_for('static',filename=product.image) }}"
+      alt="{{ product.name }}"
+    />{% else %}<span
+      >{{ {'Electronics':'✳','Fashion':'◒','Computers':'⌘','Home &
+      Living':'◍','Beauty':'❋','Accessories':'◇'}.get(product.category.name,'✳')
+      }}</span
+    >{% endif %}
+    <div class="visual-caption">A DREAMCART FIND <b>✳</b></div>
+  </div>
+  <div class="detail-copy">
+    <span class="eyebrow">{{ product.category.name }} / THE EDIT</span>
+    <h1>{{ product.name }}</h1>
+    <div class="detail-rating">
+      {% if product.rating %}★ {{ product.rating }} · {{ product.reviews|length
+      }} reviews{% else %}A new favourite{% endif %}
+    </div>
+    <div class="detail-price">
+      ₹{{ '%.2f'|format(product.sale_price) }} {% if product.discount %}<del
+        >₹{{ '%.2f'|format(product.price) }}</del
+      ><span class="sale-tag">Save {{ product.discount }}%</span>{% endif %}
+    </div>
+    <p>{{ product.description }}</p>
+    <div class="stock-note">
+      <i></i> {{ 'Only a few left' if product.stock<6 and product.stock>0 else
+      'Ready to find a new home' if product.stock else 'Currently out of stock'
+      }}
+    </div>
+    <form
+      action="{{ url_for('cart_add',pid=product.id) }}"
+      method="post"
+      class="detail-actions"
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /><label
+        >Qty
+        <input
+          name="quantity"
+          type="number"
+          min="1"
+          max="{{ product.stock }}"
+          value="1" /></label
+      ><button
+        class="button button-dark"
+        {%
+        if
+        not
+        product.stock
+        %}disabled{%
+        endif
+        %}
+      >
+        Add to bag <span>↗</span>
+      </button>
+    </form>
+    <form
+      action="{{ url_for('wishlist_toggle',pid=product.id) }}"
+      method="post"
+    >
+      <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}"
+      /><button class="under-link">♡ Save to wishlist</button>
+    </form>
+    <div class="detail-perks">
+      <span>↗ Secure checkout</span><span>⌁ Easy returns within 14 days</span
+      ><span>✳ Free delivery over ₹2,500</span>
+    </div>
+  </div>
+</section>
+<section class="section reviews" id="reviews">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">NOTES FROM THE COMMUNITY</span>
+      <h2>Good words, honestly.</h2>
+    </div>
+    <span>{{ product.reviews|length }} reviews</span>
+  </div>
+  <div class="review-layout">
+    <div class="review-list">
+      {% for r in product.reviews %}
+      <article class="review">
+        <div class="stars">{{ '★' * r.rating }}{{ '☆' * (5-r.rating) }}</div>
+        <p>{{ r.body }}</p>
+        <small
+          >{{ r.user.name }} · {{ r.created_at.strftime('%b %d, %Y') }}</small
+        >
+      </article>
+      {% else %}
+      <p class="muted">Be the first to share a thought about this find.</p>
+      {% endfor %}
+    </div>
+    <form
+      class="review-form"
+      action="{{ url_for('review',slug=product.slug) }}"
+      method="post"
+    >
+      <h3>Leave a note</h3>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /><label
+        >Your rating<select name="rating">
+          <option value="5">★★★★★ — Loved it</option>
+          <option value="4">★★★★ — Really good</option>
+          <option value="3">★★★ — Just right</option>
+          <option value="2">★★ — Could be better</option>
+          <option value="1">★ — Not for me</option>
+        </select></label
+      ><label
+        >Your thoughts<textarea
+          name="body"
+          rows="3"
+          placeholder="What should someone know?"
+          required
+        ></textarea></label
+      ><button class="button button-outline">Share your note</button>
+    </form>
+  </div>
+</section>
+{% if related %}
+<section class="section product-section tinted">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">MORE TO EXPLORE</span>
+      <h2>In the same spirit.</h2>
+    </div>
+  </div>
+  <div class="product-grid">
+    {% for p in related %}{{ card(p) }}{% endfor %}
+  </div>
+</section>
+{% endif %}{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}{% block content %}
+<section class="admin-form-page">
+  <a class="under-link" href="{{ url_for('admin_dashboard') }}">← Store desk</a
+  ><span class="eyebrow">A NOTE FROM THE COMMUNITY</span>
+  <h1>Messages</h1>
+  <div class="admin-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>FROM</th>
+          <th>DATE</th>
+          <th>MESSAGE</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in messages %}
+        <tr>
+          <td>
+            <b>{{ m.name }}</b><br /><a href="mailto:{{ m.email }}"
+              >{{ m.email }}</a
+            >
+          </td>
+          <td>{{ m.created_at.strftime('%b %d, %Y') }}</td>
+          <td>{{ m.message }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" class="empty-table">No notes to read just yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

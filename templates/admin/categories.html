@@ -1,0 +1,49 @@
+{% extends 'base.html' %}{% block content %}
+<section class="admin-form-page">
+  <a class="under-link" href="{{ url_for('admin_dashboard') }}">← Store desk</a
+  ><span class="eyebrow">THE SHOP FLOOR</span>
+  <h1>Categories</h1>
+  <form method="post" class="product-admin-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /><label
+      >New category<input
+        name="name"
+        required
+        placeholder="A new place to browse" /></label
+    ><button class="button button-dark">Add category +</button>
+  </form>
+  <div class="admin-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>CATEGORY</th>
+          <th>PRODUCTS</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in categories %}
+        <tr>
+          <td><b>{{ c.name }}</b></td>
+          <td>{{ c.products|length }}</td>
+          <td>
+            {% if not c.products %}
+            <form
+              method="post"
+              action="{{ url_for('admin_category_delete',cid=c.id) }}"
+              data-confirm="Delete this category?"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              /><button class="text-button remove-link">Delete</button>
+            </form>
+            {% else %}<span class="muted">In use</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

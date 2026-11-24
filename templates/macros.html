@@ -1,0 +1,36 @@
+{% macro card(p) %}
+<article class="product-card">
+    <a class="product-visual {{ 'photo' if p.image }}" 
+    href="{{ url_for('product_detail',slug=p.slug) }}">{% if p.image %}
+    <img src="{{ p.image if p.image.startswith('http') else url_for('static',filename=p.image) }}" 
+    alt="{{ p.name }}">{% else %}
+    <span class="product-emoji">{{ 
+        {'Electronics':'✳','Fashion':'◒','Mobile Phones':'▣','Computers':'⌘','Home & Living':'◍',
+        'Books':'▤','Beauty':'❋','Accessories':'◇'}.get(p.category.name,'✳') }}
+    </span>{% endif %}{% if p.discount %}
+    <span class="sale-tag">−{{ p.discount }}%</span>
+    {% endif %}
+    <span class="quick-view">View details ↗</span>
+</a><div class="product-meta">
+    <div>
+        <span class="product-category">{{ p.category.name }}</span>
+        <a class="product-name" href="{{ url_for('product_detail',slug=p.slug) }}">{{ p.name }}</a>
+    </div>
+    <form action="{{ url_for('wishlist_toggle',pid=p.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="heart" title="Save to wishlist">♡</button>
+    </form>
+</div>
+<div class="product-price">
+    <strong>₹{{ '%.2f'|format(p.sale_price) }}</strong>
+    {% if p.discount %}
+    <del>₹{{ '%.2f'|format(p.price) }}</del>
+    {% endif %}
+    <span class="rating">{% if p.rating %}★ {{ p.rating }}{% else %}New{% endif %}</span>
+</div>
+<form action="{{ url_for('cart_add',pid=p.id) }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="add-link" {% if p.stock<1 %}disabled{% endif %}>{{ 'Out of stock' if p.stock
+        <1 else 'Add to bag +' }}</button>
+        </form>
+        </article>{% endmacro %}

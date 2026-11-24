@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Store overview — DreamCart{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar">
+    <span class="eyebrow">DREAMCART / ADMIN</span><h2>Store desk.</h2>
+    <a class="active" href="{{ url_for('admin_dashboard') }}">Overview</a>
+    <a href="{{ url_for('admin_products') }}">Products</a>
+    <a href="{{ url_for('admin_orders') }}">Orders</a>
+    <a href="{{ url_for('admin_customers') }}">Customers</a>
+    <a href="{{ url_for('admin_categories') }}">Categories</a>
+    <a href="{{ url_for('admin_coupons') }}">Coupons</a>
+    <a href="{{ url_for('admin_reviews') }}">Reviews</a>
+    <a href="{{ url_for('admin_messages') }}">Messages</a>
+    <span class="admin-help">A tidy shop is a happy shop.</span>
+  </aside>
+  <div class="admin-main">
+    <div class="admin-heading">
+      <div><span class="eyebrow">A QUICK LOOK AROUND</span><h1>Good morning, {{ current_user.name.split()[0] }}.</h1></div>
+      <a class="button button-dark" href="{{ url_for('admin_new') }}">+ Add a product</a>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><span>GROSS SALES</span><b>₹{{ '%.0f'|format(sales) }}</b><small>Across placed orders</small></div>
+      <div class="stat-card"><span>ORDERS</span><b>{{ orders }}</b><small>All time</small></div>
+      <div class="stat-card"><span>PRODUCTS</span><b>{{ products }}</b><small>In the edit</small></div>
+      <div class="stat-card"><span>PEOPLE</span><b>{{ customers }}</b><small>Part of DreamCart</small></div>
+    </div>
+    <div class="admin-table-wrap">
+      <div class="table-heading"><h2>Recent orders</h2><a class="under-link" href="{{ url_for('admin_orders') }}">See all ↗</a></div>
+      <table><thead><tr><th>ORDER</th><th>PERSON</th><th>DATE</th><th>TOTAL</th><th>STATUS</th></tr></thead>
+        <tbody>{% for o in recent %}
+          <tr><td>{{ o.order_number }}</td><td>{{ o.user.name }}</td><td>{{ o.created_at.strftime('%b %d') }}</td><td>₹{{ '%.2f'|format(o.total) }}</td><td><span class="status-pill">{{ o.status }}</span></td></tr>
+        {% else %}<tr><td colspan="5" class="empty-table">No orders yet. A good start is just around the corner.</td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

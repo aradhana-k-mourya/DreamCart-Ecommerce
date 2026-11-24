@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% block content %}
+<section class="info-page">
+  <span class="eyebrow">{{ eyebrow }}</span>
+  <h1>{{ title }}</h1>
+  <p>{{ body }}</p>
+  <a class="button button-outline" href="{{ url_for('index') }}"
+    >Back to DreamCart ↗</a
+  >
+</section>
+{% endblock %}

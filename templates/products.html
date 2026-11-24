@@ -1,0 +1,107 @@
+{% extends 'base.html' %}{% from 'macros.html' import card %}{% block title
+%}Shop all — DreamCart{% endblock %}{% block content %}
+<section class="page-intro">
+  <span class="eyebrow">THE DREAMCART EDIT</span>
+  <h1>
+    {% if term %}Found for “{{ term }}”{% else %}Good things, all in one
+    place.{% endif %}
+  </h1>
+  <p>Useful, lovely, made for the everyday.</p>
+</section>
+<section class="catalog-layout">
+  <aside class="filters">
+    <h3>Refine the edit</h3>
+    <form action="{{ url_for('products') }}">
+      <label
+        >Search<input
+          name="q"
+          value="{{ term }}"
+          placeholder="What are you looking for?" /></label
+      ><label
+        >Category<select name="category">
+          <option value="">Everything</option>
+          {% for c in site_categories %}
+          <option
+            value="{{ c.slug }}"
+            {% if selected_category == c.slug %}selected{%
+            endif
+            %}
+          >
+            {{ c.name }}
+          </option>
+          {% endfor %}
+        </select></label
+      >
+      <div class="filter-pair">
+        <label
+          >Min ₹<input
+            name="min"
+            type="number"
+            min="0"
+            value="{{ request.args.get('min','') }}" /></label
+        ><label
+          >Max ₹<input
+            name="max"
+            type="number"
+            min="0"
+            value="{{ request.args.get('max','') }}"
+        /></label>
+      </div>
+      <label
+        >Minimum rating<select name="rating"><option value="">Any rating</option>{% for r in range(4,0,-1) %}<option value="{{ r }}" {% if request.args.get("rating")|int==r %}selected{% endif %}>{{ r }} stars & up</option>{% endfor %}</select></label>
+      <label
+        >Sort by<select name="sort">
+          <option
+            value="popular"
+            {% if sort == 'popular' %}selected{%
+            endif
+            %}
+          >
+            Curated
+          </option>
+          <option value="newest" {% if sort == 'newest' %}selected{% endif %}>
+            Newest
+          </option>
+          <option
+            value="price_low"
+            {% if sort == 'price_low' %}selected{%
+            endif
+            %}
+          >
+            Price: low to high
+          </option>
+          <option
+            value="price_high"
+            {% if sort == 'price_high' %}selected{%
+            endif
+            %}
+          >
+            Price: high to low
+          </option>
+          <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Top rated</option>
+        </select></label
+      ><button class="button button-dark full">Update edit</button>
+    </form>
+  </aside>
+  <div>
+    <div class="catalog-top">
+      <span>{{ products|length }} considered finds</span
+      ><span>Good things, well chosen ✳</span>
+    </div>
+    {% if products %}
+    <div class="product-grid">
+      {% for p in products %}{{ card(p) }}{% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <span>⌕</span>
+      <h2>Nothing just yet.</h2>
+      <p>Try another search or browse all of our good things.</p>
+      <a class="button button-dark" href="{{ url_for('products') }}"
+        >See everything</a
+      >
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

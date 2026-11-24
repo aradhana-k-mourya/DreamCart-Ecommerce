@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+<title id="title">DreamCart shopping bag mark</title>
+<circle cx="48" cy="48" r="46" fill="#344C3F"/>
+<path d="M30 38v-5a18 18 0 0 1 36 0v5" fill="none" stroke="#D4AF62" stroke-width="4" stroke-linecap="round"/>
+<path d="M24 38h48l-4 39H28l-4-39Z" fill="#F8F6F0"/>
+<path d="M47 47c-8 4-10 15-5 22 5 6 13 8 20 3-3 8-11 12-19 10-9-3-14-12-11-21 2-7 8-12 15-14Z" fill="#D4AF62"/>
+<path d="m64 49 2 4 5 1-4 3 1 5-4-2-4 2 1-5-4-3 5-1 2-4Z" fill="#D4AF62"/>
+</svg>
